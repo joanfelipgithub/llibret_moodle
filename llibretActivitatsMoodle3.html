@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+  <meta charset="UTF-8">
+  <title>Llibre A4 Plegat - Imposició Universal (Saddle-Stitch)</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Verdana, Arial, sans-serif;
+      font-size: 8.5pt;
+      line-height: 1.4;
+      background: #f0f0f0;
+      color: #222;
+    }
+
+    .no-print {
+      background: #e0e0e0;
+      color: #222;
+      padding: 15px 20px;
+      margin-bottom: 20px;
+      border-bottom: 2px solid #ccc;
+    }
+    .no-print h2 { margin: 0 0 10px 0; font-size: 1.2rem; }
+    
+    .input-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+      margin-bottom: 12px;
+    }
+
+    .input-group label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 4px;
+      font-size: 0.85rem;
+    }
+
+    .no-print textarea {
+      width: 100%;
+      height: 100px;
+      padding: 8px;
+      font-family: monospace;
+      border: 1px solid #aaa;
+      border-radius: 4px;
+      resize: vertical;
+    }
+
+    .file-input {
+      margin-top: 4px;
+      font-size: 0.8rem;
+    }
+
+    .no-print button {
+      background: #444;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 1rem;
+      cursor: pointer;
+      border-radius: 4px;
+      font-weight: bold;
+    }
+    .no-print button:hover { background: #222; }
+
+    @page {
+      size: A4 landscape; /* 297mm x 210mm */
+      margin: 0;
+    }
+
+    @media print {
+      .no-print { display: none !important; }
+      body { background: white; }
+      .book-container {
+        page-break-after: always;
+        break-after: page;
+        page-break-inside: avoid;
+        break-inside: avoid;
+      }
+    }
+
+    /* Booklet Spread Setup (1 A4 Landscape Sheet = 2 A5 pages) */
+    .book-container {
+      width: 297mm;
+      height: 210mm;
+      margin: 0 auto 20px auto;
+      background: white;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 0 10px rgba(0,0,0,0.15);
+    }
+
+    .a5-page {
+      width: 148.5mm;
+      height: 210mm;
+      float: left;
+      padding: 10mm 12mm 12mm 12mm;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Prevents overlapping text inside child boxes */
+    .a5-page * {
+      max-height: none !important;
+    }
+
+    /* Center Fold Line Guide */
+    .book-container::after {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 148.5mm;
+      border-left: 1px dashed #ccc;
+    }
+
+    .student-header {
+      position: absolute;
+      top: 4mm;
+      right: 12mm;
+      font-size: 7pt;
+      font-style: italic;
+      color: #666;
+      text-align: right;
+    }
+
+    h1, h2, h3 { margin-top: 0; color: #111; }
+    h2, h3 { border-bottom: 1px solid #ccc; padding-bottom: 4px; }
+    
+    .cover {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      text-align: center;
+      background: #f5f5f5;
+      color: #222;
+      padding: 15mm 12mm;
+      border: 1px solid #e0e0e0;
+    }
+    .cover h1 { font-size: 1.5rem; margin-bottom: 8px; }
+    .cover .subtitle { font-size: 0.9rem; color: #444; }
+    .cover .student-box {
+      background: #ffffff;
+      color: #222;
+      padding: 10px;
+      border-radius: 4px;
+      margin: 15px 0;
+      border: 1px solid #888;
+    }
+    .cover .student-box label { font-size: 0.75rem; text-transform: uppercase; display: block; color: #555; }
+    .cover .student-name { font-size: 1.3rem; font-weight: bold; }
+
+    table { width: 100%; border-collapse: collapse; font-size: 7.5pt; margin: 6px 0; }
+    th, td { border: 1px solid #bbb; padding: 4px 5px; text-align: left; }
+    th { background: #e8e8e8; color: #111; font-weight: bold; }
+    tr:nth-child(even) { background: #fafafa; }
+
+    .box {
+      background: #f8f8f8;
+      border: 1px solid #ddd;
+      border-left: 4px solid #888;
+      padding: 6px 8px;
+      margin-bottom: 8px;
+      font-size: 8pt;
+    }
+
+    .evidence-box {
+      background: #fbfbfb;
+      border: 1px dashed #888;
+      padding: 6px 8px;
+      margin: 6px 0;
+      border-radius: 4px;
+      font-size: 8pt;
+    }
+
+    .mission-header {
+      background: #e8e8e8;
+      color: #111;
+      padding: 8px 12px;
+      border-radius: 4px;
+      margin: 10px 0 6px 0;
+      border: 1px solid #ccc;
+    }
+
+    pre {
+      background: #f4f4f4;
+      border: 1px solid #ccc;
+      color: #222;
+      padding: 6px;
+      font-family: Consolas, monospace;
+      font-size: 6.5pt;
+      white-space: pre-wrap;
+      word-break: break-all;
+      max-height: 140mm;
+      overflow: hidden;
+      margin: 4px 0;
+    }
+
+    details {
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 4px 6px;
+      margin: 4px 0;
+      background: #fff;
+    }
+    summary { font-weight: bold; cursor: pointer; font-size: 8pt; }
+    
+    .footer-tag {
+      position: absolute;
+      bottom: 4mm;
+      left: 12mm;
+      right: 12mm;
+      font-size: 7pt;
+      color: #666;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="no-print">
+    <h2>Generador Universal de Llibres (Imposició Plegable A4 → A5)</h2>
+    
+    <div class="input-grid">
+      <!-- 1. Student List Input -->
+      <div class="input-group">
+        <label for="studentList">1. Llista d'Alumnes (un per línia):</label>
+        <textarea id="studentList" placeholder="Enganxa aquí els alumnes, un per línia...">Pere Roura Candela</textarea>
+      </div>
+
+      <!-- 2. Moodle Activity HTML Input Area -->
+      <div class="input-group">
+        <label for="activityHtml">2. Codi HTML de l'Activitat Moodle (o carregar fitxer):</label>
+        <textarea id="activityHtml" placeholder="Enganxa aquí el codi HTML de Moodle o puja un fitxer .html..."></textarea>
+        <input type="file" id="htmlFileInput" accept=".html,.htm,.txt" class="file-input" />
+      </div>
+    </div>
+
+    <button onclick="generateBooklets()">Generar i Imprimir Tots els Llibres</button>
+  </div>
+
+  <!-- Offscreen sandbox area for measuring element heights -->
+  <div id="sandbox" style="position: absolute; left: -9999px; top: -9999px; width: 124.5mm;"></div>
+
+  <div id="printOutput"></div>
+
+  <script>
+    // Handle File Upload into the Activity HTML Textarea
+    document.getElementById('htmlFileInput').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        document.getElementById('activityHtml').value = evt.target.result;
+      };
+      reader.readAsText(file);
+    });
+
+    // Recursively unwrap top-level containers so internal sub-boxes can paginate independently
+    function extractFineElementsFromHTML(htmlString) {
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(htmlString, 'text/html');
+      let root = doc.body;
+
+      let fineNodes = [];
+
+      function flattenNode(node) {
+        // If the node is a wrapper container with multiple children, extract its children
+        if (node.children && node.children.length > 1 && (node.tagName === 'DIV' || node.tagName === 'SECTION')) {
+          Array.from(node.children).forEach(child => flattenNode(child));
+        } else {
+          fineNodes.push(node);
+        }
+      }
+
+      Array.from(root.children).forEach(child => flattenNode(child));
+      return fineNodes;
+    }
+
+    // Splits HTML content dynamically into printable A5 pages
+    function splitContentIntoA5Pages(htmlContent, studentName) {
+      const sandbox = document.getElementById('sandbox');
+      sandbox.innerHTML = '';
+
+      const elements = extractFineElementsFromHTML(htmlContent);
+      elements.forEach(el => sandbox.appendChild(el.cloneNode(true)));
+
+      const pageHeightPx = 620; // Safe height threshold for A5 page
+      const children = Array.from(sandbox.children);
+      
+      let pages = [];
+      let currentPageHTML = '';
+      let currentHeight = 0;
+
+      // Cover Page (Page 1)
+      const coverPageHTML = `
+        <div class="a5-page cover">
+          <div>
+            <h1>☀️ Activitat de Pràctiques</h1>
+            <p class="subtitle">Guia de treball i recollida d'evidències</p>
+          </div>
+          <div class="student-box">
+            <label>Aquest llibre pertany a:</label>
+            <div class="student-name">${studentName}</div>
+          </div>
+          <div style="font-size: 0.75rem; color: #555;">
+            CFGM Instal·lacions Elèctriques i Automàtiques<br>
+            Institut Santa Coloma de Farners
+          </div>
+        </div>
+      `;
+      pages.push(coverPageHTML);
+
+      // Paginate fine elements into standard A5 pages
+      if (children.length > 0) {
+        children.forEach((child) => {
+          const childHeight = child.offsetHeight || 35;
+
+          if (currentHeight + childHeight > pageHeightPx && currentPageHTML !== '') {
+            pages.push(currentPageHTML);
+            currentPageHTML = child.outerHTML;
+            currentHeight = childHeight;
+          } else {
+            currentPageHTML += child.outerHTML;
+            currentHeight += childHeight;
+          }
+        });
+
+        if (currentPageHTML.trim() !== '') {
+          pages.push(currentPageHTML);
+        }
+      } else {
+        pages.push(`<div>${htmlContent}</div>`);
+      }
+
+      sandbox.innerHTML = ''; // Clear sandbox
+
+      // Wrap pages in A5 containers with student headers
+      return pages.map((content, idx) => {
+        if (idx === 0) return content; // Skip cover page
+
+        const headerHTML = `<div class="student-header"><em>${studentName}</em></div>`;
+        return `
+          <div class="a5-page">
+            ${headerHTML}
+            <div>${content}</div>
+            <div class="footer-tag">Pàgina ${idx + 1}</div>
+          </div>
+        `;
+      });
+    }
+
+    // Saddle-Stitch Imposition Engine Algorithm
+    function generateImposedSpreads(logicalPages) {
+      let totalPages = logicalPages.length;
+      while (totalPages % 4 !== 0) {
+        logicalPages.push(`
+          <div class="a5-page">
+            <div class="footer-tag">Notes / Apunts</div>
+          </div>
+        `);
+        totalPages++;
+      }
+
+      const numSheets = totalPages / 4;
+      let htmlOutput = '';
+
+      for (let k = 1; k <= numSheets; k++) {
+        // Front Side (Side A)
+        const frontLeftIdx = totalPages - 2 * (k - 1) - 1;
+        const frontRightIdx = 2 * (k - 1);
+
+        htmlOutput += `
+        <div class="book-container">
+          ${logicalPages[frontLeftIdx]}
+          ${logicalPages[frontRightIdx]}
+        </div>`;
+
+        // Back Side (Side B)
+        const backLeftIdx = 2 * k - 1;
+        const backRightIdx = totalPages - 2 * k;
+
+        htmlOutput += `
+        <div class="book-container">
+          ${logicalPages[backLeftIdx]}
+          ${logicalPages[backRightIdx]}
+        </div>`;
+      }
+
+      return htmlOutput;
+    }
+
+    function generateBooklets() {
+      const rawNames = document.getElementById('studentList').value;
+      const activityHtml = document.getElementById('activityHtml').value.trim();
+
+      if (!activityHtml) {
+        alert("S'hi us plau, enganxa el codi HTML de l'activitat!");
+        return;
+      }
+
+      const names = rawNames.split(/\n/).map(n => n.trim()).filter(n => n.length > 0);
+      
+      if (names.length === 0) {
+        names.push("Exemple d'Alumne");
+      }
+
+      const output = document.getElementById('printOutput');
+      output.innerHTML = '';
+
+      names.forEach(name => {
+        const pages = splitContentIntoA5Pages(activityHtml, name);
+        output.innerHTML += generateImposedSpreads(pages);
+      });
+
+      setTimeout(() => {
+        window.print();
+      }, 750);
+    }
+  </script>
+</body>
+</html>
